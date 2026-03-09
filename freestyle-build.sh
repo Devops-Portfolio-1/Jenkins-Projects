@@ -1,1 +1,2 @@
+npm -l
 npm --version
