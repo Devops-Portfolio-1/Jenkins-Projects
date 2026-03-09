@@ -1,3 +1,1 @@
-#!/bin/bash
-npm -l
-npm --version
+echo "Checking npm Version"
