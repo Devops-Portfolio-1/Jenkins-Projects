@@ -20,11 +20,13 @@ pipeline {
                 }
             }
         }
-        stage("build image") {
+        stage("build and push image") {
             steps {
                 script {
                     echo "building image "
-                    buildImage 'shalindra936/java-maven-app:jma-1.4'
+                    buildImage 'shalindra936/java-maven-app:jma-2.0'
+                    dockerLogin()
+                    dockerPush 'shalindra936/java-maven-app:jma-2.0'
                 }
             }
         }
