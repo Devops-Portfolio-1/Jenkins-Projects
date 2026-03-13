@@ -1,3 +1,9 @@
+#!/usr/bin/env groovy
+
+@Library('jenkins-shared-library') 
+def gv
+
+
 pipeline {
     agent any
     stages {
@@ -6,15 +12,15 @@ pipeline {
             steps {
                 script {
                     echo "building jar"
-                    
+                    buildJar()
                 }
             }
         }
         stage("build image") {
             steps {
                 script {
-                    echo "building image"
-                   
+                    echo "building image "
+                    buildImage 'shalindra936/java-maven-app:jma-1.4'
                 }
             }
         }
