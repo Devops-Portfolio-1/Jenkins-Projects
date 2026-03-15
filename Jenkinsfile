@@ -18,7 +18,7 @@ pipeline {
                      * Accesses the first match group from the matcher object.
                      * matcher[0][1] refers to:
                      * - matcher[0]: The first match found by the regular expression (typically the version tag in the pom file).
-                     * - matcher[0][1]: The first capturing group within that match (usually the actual version string inside the <version> tag).
+                     * - matcher[0][1]: The first capturing group within that match (usually the actual version string inside the <version> tag)
                      */
                     def version = matcher[0][1]
                     env.IMAGE_NAME = "$version-$BUILD_NUMBER"
