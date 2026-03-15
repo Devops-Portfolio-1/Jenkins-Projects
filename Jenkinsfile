@@ -42,10 +42,11 @@ pipeline {
                 script {
                     echo "Testing the application..."
                     echo "Building the Docker image..."
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh "docker build -t shalindra936/java-maven-app:${IMAGE_NAME} ."
                     sh 'echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin'
                     sh "docker push shalindra936/java-maven-app:${IMAGE_NAME}"
+                    }
                 }
             }
         
