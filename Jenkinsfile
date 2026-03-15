@@ -21,7 +21,7 @@ pipeline {
                      * - matcher[0][1]: The first capturing group within that match (usually the actual version string inside the <version> tag).
                      */
                     def version = matcher[0][1]
-                    env.IMAGE_NAME = "version-$BUILD_NUMBER"
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                     // adding the build numnber as the suffix to the version number to make it unique for each build, some ppl add the git commit hash as well to make it more unique.
                 }
             }
