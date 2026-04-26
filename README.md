@@ -1,4 +1,4 @@
-# DevOps Engineer Portfolio Project: Jenkins CI/CD with SSH-Agent Deployment
+# DevOps Engineer Portfolio Project: Jenkins CI/CD 
 
 This repository showcases a DevOps Engineer workflow for building, packaging, and deploying a Java application using Jenkins, Docker, and AWS EC2 with secure SSH credential management.
 
@@ -11,10 +11,10 @@ This repository showcases a DevOps Engineer workflow for building, packaging, an
 
 This project is designed to demonstrate the hands-on delivery and operations responsibilities expected from a DevOps Engineer in production-oriented environments.
 
-## DevOps Engineer Capabilities Demonstrated
+## Steps that were executed
 
 - Jenkins Declarative Pipeline design
-- Reusable Jenkins Shared Library usage (`buildJar`, `buildImage`, `dockerLogin`, `dockerPush`)
+- Reusable **Jenkins Shared Library** usage (`buildJar`, `buildImage`, `dockerLogin`, `dockerPush`)
 - Secure deployment with Jenkins-managed SSH credentials (`ec2-server-key`)
 - Automated remote deployment using `scp` + `ssh`
 - Containerized application delivery using Docker and Docker Compose
@@ -28,7 +28,7 @@ This project is designed to demonstrate the hands-on delivery and operations res
 - `Dockerfile` – container build definition
 - `docker-compose.yaml` – runtime services on server
 - `server-cmds.sh` – remote deployment command wrapper
-- `src/` – Java source code and tests
+- `src/` – Java source code and test cases
 
 ## CI/CD Pipeline Flow
 
@@ -57,21 +57,5 @@ This project is designed to demonstrate the hands-on delivery and operations res
 ```bash
 mvn clean verify
 ```
-
-## Why This Fits a DevOps Engineer Role
-
-This branch highlights practical responsibilities commonly expected from a DevOps Engineer:
-
-- CI/CD pipeline ownership from build through production-style deployment
-- Secure automation using centrally managed credentials in Jenkins
-- Container lifecycle management and release delivery through Docker Hub
-- Cloud-based service rollout and runtime orchestration on EC2
-- Cross-functional readiness: developer workflow + operational execution
-
----
-
-For interview review, I can also provide:
-- architecture diagrams
-- Jenkins job screenshots
-- deployment logs
-- branch-by-branch enhancement notes
+Installing Docker Compose in ec2 Instance 
+![/images/image-1]
