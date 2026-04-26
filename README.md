@@ -1,6 +1,6 @@
-# Jenkins CI/CD Portfolio Project (SSH Agent Deployment)
+# DevOps Engineer Portfolio Project: Jenkins CI/CD with SSH-Agent Deployment
 
-This repository demonstrates a complete DevOps workflow for a Java Maven application using Jenkins, Docker, and AWS EC2 deployment over SSH credentials managed by Jenkins.
+This repository showcases a DevOps Engineer workflow for building, packaging, and deploying a Java application using Jenkins, Docker, and AWS EC2 with secure SSH credential management.
 
 ## Project Summary
 
@@ -9,15 +9,17 @@ This repository demonstrates a complete DevOps workflow for a Java Maven applica
 - Deploys to an EC2 host using `sshagent` in Jenkins
 - Starts services with Docker Compose on the target server
 
-This project is designed to showcase practical CI/CD engineering skills that are relevant to real production delivery pipelines.
+This project is designed to demonstrate the hands-on delivery and operations responsibilities expected from a DevOps Engineer in production-oriented environments.
 
-## What This Project Demonstrates
+## DevOps Engineer Capabilities Demonstrated
 
 - Jenkins Declarative Pipeline design
 - Reusable Jenkins Shared Library usage (`buildJar`, `buildImage`, `dockerLogin`, `dockerPush`)
 - Secure deployment with Jenkins-managed SSH credentials (`ec2-server-key`)
 - Automated remote deployment using `scp` + `ssh`
 - Containerized application delivery using Docker and Docker Compose
+- Release automation from source commit to runtime environment
+- Infrastructure interaction and operational deployment execution on EC2
 
 ## Repository Structure
 
@@ -56,18 +58,19 @@ This project is designed to showcase practical CI/CD engineering skills that are
 mvn clean verify
 ```
 
-## Why This Is Recruiter-Relevant
+## Why This Fits a DevOps Engineer Role
 
-This branch highlights practical DevOps capabilities expected in junior-to-mid platform and CI/CD roles:
+This branch highlights practical responsibilities commonly expected from a DevOps Engineer:
 
-- End-to-end pipeline ownership from build to deployment
-- Security-aware automation using managed credentials
-- Container-first deployment design
-- Cloud-hosted operational delivery (EC2 + Docker)
+- CI/CD pipeline ownership from build through production-style deployment
+- Secure automation using centrally managed credentials in Jenkins
+- Container lifecycle management and release delivery through Docker Hub
+- Cloud-based service rollout and runtime orchestration on EC2
+- Cross-functional readiness: developer workflow + operational execution
 
 ---
 
-If you are reviewing this as part of my portfolio, I can also provide:
+For interview review, I can also provide:
 - architecture diagrams
 - Jenkins job screenshots
 - deployment logs
