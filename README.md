@@ -57,14 +57,20 @@ This project is designed to demonstrate the hands-on delivery and operations res
 ```bash
 mvn clean verify
 ```
-Installing Docker Compose in ec2 Instance 
+### Installing Docker Compose in ec2 Instance 
 !["image"](images/image-1.png)
 
-Pipeline Execution Success : Blue Ocean Plugin View
+### Private Docker Repo where the Image was pushed through the App Versioning Branch Pipeline
+!["image"](images/image-5.png)
+
+### MultiBranch Pipeline View in Jenkins
+!["image"](images/image-6.png)
+
+### Pipeline Execution Success : Blue Ocean Plugin View
 !["image"](images/image-4.png)
 
-Running Containers of Maven app and Postgres Database after the deployment
+### Running Containers of Maven app and Postgres Database after the deployment
 !["image"](images/image-2.png)
 
-Removing the contianers and free Up Space 
+### Removing the contianers and free Up Space 
 !["image"](images/image-3.png)
