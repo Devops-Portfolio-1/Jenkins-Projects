@@ -123,9 +123,3 @@ To use:
 - The Dockerfile expects the Maven build output at `target/java-maven-app-*.jar`.
 - The app listens on port **8080**.
 - The test suite includes a basic JUnit test validating the application status method.
-
----
-
-## License
-
-No license file is currently included in this repository.
