@@ -2,10 +2,463 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AtlasFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0b0f14;
+            --paper: #f6f3ed;
+            --sun: #ffb100;
+            --sea: #1e7cff;
+            --mint: #33d19b;
+            --rose: #ff6b6b;
+            --smoke: rgba(11, 15, 20, 0.08);
+            --glass: rgba(255, 255, 255, 0.65);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+            color: var(--ink);
+            background: radial-gradient(1200px 600px at 10% -10%, #ffe7b5 0%, rgba(255, 231, 181, 0) 60%),
+                radial-gradient(900px 500px at 95% 10%, #c9e2ff 0%, rgba(201, 226, 255, 0) 55%),
+                linear-gradient(180deg, #f8f2e8 0%, #f4f0ea 40%, #f8f7f3 100%);
+            min-height: 100vh;
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+            mix-blend-mode: multiply;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 6vw 12px;
+            gap: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .brand-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: conic-gradient(from 180deg, var(--sun), var(--rose), var(--sea), var(--mint), var(--sun));
+            box-shadow: 0 10px 24px rgba(30, 124, 255, 0.2);
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(11, 15, 20, 0.1);
+            background: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .theme-toggle span {
+            font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+            font-size: 11px;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--ink);
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            align-items: center;
+            padding: 48px 6vw 64px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 3.6vw, 4.6rem);
+            line-height: 1.05;
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            max-width: 520px;
+            color: rgba(11, 15, 20, 0.75);
+        }
+
+        .cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 14px 24px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--ink);
+            color: #fff;
+            box-shadow: 0 16px 30px rgba(11, 15, 20, 0.25);
+        }
+
+        .btn-ghost {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            color: var(--ink);
+            border: 1px solid rgba(11, 15, 20, 0.08);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-card {
+            position: relative;
+            border-radius: 32px;
+            padding: 28px;
+            background: var(--glass);
+            box-shadow: 0 24px 60px rgba(30, 124, 255, 0.18);
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(300px 140px at 10% 10%, rgba(255, 177, 0, 0.25), transparent 60%),
+                radial-gradient(300px 160px at 90% 20%, rgba(51, 209, 155, 0.3), transparent 55%),
+                linear-gradient(120deg, rgba(30, 124, 255, 0.18), transparent 60%);
+            pointer-events: none;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .metric {
+            border-radius: 18px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(11, 15, 20, 0.05);
+        }
+
+        .metric h3 {
+            font-size: 1.6rem;
+        }
+
+        .metric span {
+            font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+            font-size: 0.8rem;
+            color: rgba(11, 15, 20, 0.55);
+        }
+
+        .section {
+            padding: 10px 6vw 72px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            border-radius: 24px;
+            padding: 22px;
+            background: #fff;
+            box-shadow: 0 18px 40px var(--smoke);
+        }
+
+        .feature h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .pulse {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.35), transparent 70%);
+            right: -40px;
+            top: -60px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        footer {
+            padding: 24px 6vw 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.9rem;
+            color: rgba(11, 15, 20, 0.6);
+        }
+
+        body.theme-dark {
+            color: #e9eef7;
+            background: radial-gradient(1200px 600px at 10% -10%, rgba(255, 183, 77, 0.18) 0%, rgba(255, 183, 77, 0) 60%),
+                radial-gradient(900px 500px at 95% 10%, rgba(74, 143, 255, 0.22) 0%, rgba(74, 143, 255, 0) 55%),
+                linear-gradient(180deg, #0b1017 0%, #0c141d 45%, #0d131a 100%);
+        }
+
+        body.theme-dark nav a {
+            color: #e9eef7;
+            opacity: 0.7;
+        }
+
+        body.theme-dark .hero p,
+        body.theme-dark footer {
+            color: rgba(233, 238, 247, 0.7);
+        }
+
+        body.theme-dark .btn-primary {
+            background: #f3f5ff;
+            color: #0b0f14;
+        }
+
+        body.theme-dark .btn-ghost,
+        body.theme-dark .hero-card,
+        body.theme-dark .theme-toggle {
+            background: rgba(13, 19, 26, 0.7);
+            color: #e9eef7;
+            border-color: rgba(233, 238, 247, 0.1);
+        }
+
+        body.theme-dark .feature {
+            background: rgba(13, 19, 26, 0.9);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        body.theme-dark .metric {
+            background: rgba(13, 19, 26, 0.8);
+            border-color: rgba(233, 238, 247, 0.1);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(12px);
+            }
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .reveal-delay {
+            animation-delay: 0.2s;
+        }
+
+        .reveal-delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        @media (max-width: 720px) {
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 28px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to Java Maven Application</h1>
-<!-- add image here  <img src="" width="" /> -->
+    <div class="noise" aria-hidden="true"></div>
+    <header>
+        <div class="brand">
+            <div class="brand-badge"></div>
+            AtlasFlow
+        </div>
+        <div class="header-actions">
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#metrics">Metrics</a>
+                <a href="#deploy">Deploy</a>
+            </nav>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+                <span id="theme-label">Light</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="reveal">
+                <h1>Launch fast, ship bold, and run with confidence.</h1>
+                <p>
+                    AtlasFlow is a modern delivery cockpit for your Java Maven workloads.
+                    Track pipelines, spotlight risk, and roll out fresh releases with
+                    calm, clear visibility.
+                </p>
+                <div class="cta-row">
+                    <button class="btn btn-primary">Start a release</button>
+                    <button class="btn btn-ghost">View live dashboard</button>
+                </div>
+            </div>
+            <div class="hero-card reveal reveal-delay" id="metrics">
+                <div class="pulse" aria-hidden="true"></div>
+                <h2>Today at a glance</h2>
+                <p>Health signals from build to prod, refreshed every 30 seconds.</p>
+                <div class="metric-grid">
+                    <div class="metric">
+                        <h3>98.4%</h3>
+                        <span>pipeline reliability</span>
+                    </div>
+                    <div class="metric">
+                        <h3>11m</h3>
+                        <span>avg. build time</span>
+                    </div>
+                    <div class="metric">
+                        <h3>3.2x</h3>
+                        <span>faster rollbacks</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="features">
+            <div class="section-title">Crisp Control</div>
+            <div class="feature-grid">
+                <article class="feature reveal">
+                    <h4>Intentional pipelines</h4>
+                    <p>Design your releases with layered stages, guardrails, and instant visibility.</p>
+                </article>
+                <article class="feature reveal reveal-delay">
+                    <h4>Ambient risk alerts</h4>
+                    <p>Know exactly where friction sits before it slows your delivery rhythm.</p>
+                </article>
+                <article class="feature reveal reveal-delay-2">
+                    <h4>Live environment pulse</h4>
+                    <p>Monitor deployments in motion with an always-on operational timeline.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="deploy">
+            <div class="section-title">Deploy in style</div>
+            <div class="hero-card reveal">
+                <h2>Built for Jenkins + Maven</h2>
+                <p>
+                    Plug in with your existing pipeline. Export reports, auto-tag builds, and
+                    bring every environment into a single, cinematic view.
+                </p>
+                <div class="cta-row">
+                    <button class="btn btn-primary">Connect Jenkins</button>
+                    <button class="btn btn-ghost">Read the playbook</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span>AtlasFlow UI concept for Java Maven App</span>
+        <span>Release-ready since 2026</span>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById("theme-toggle");
+        const themeLabel = document.getElementById("theme-label");
+
+        const setTheme = (mode) => {
+            document.body.classList.toggle("theme-dark", mode === "dark");
+            themeToggle.setAttribute("aria-pressed", mode === "dark");
+            themeLabel.textContent = mode === "dark" ? "Dark" : "Light";
+        };
+
+        const storedTheme = localStorage.getItem("atlasflow-theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const initialTheme = storedTheme || (prefersDark ? "dark" : "light");
+        setTheme(initialTheme);
+
+        themeToggle.addEventListener("click", () => {
+            const nextTheme = document.body.classList.contains("theme-dark") ? "light" : "dark";
+            localStorage.setItem("atlasflow-theme", nextTheme);
+            setTheme(nextTheme);
+        });
+    </script>
 </body>
 </html>
