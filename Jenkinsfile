@@ -58,30 +58,24 @@ pipeline {
                 }
             }
         }
-        stage('commit version update'){
-        steps{
-            script{
-                withCredentials([usernamePassword(credentialsId: 'gitlab-token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    //this part only need to set once 
-                    sh 'git config --global user.name "jenkins"'
-                    sh 'git config --global user.email "jenkins@example.com" '
+        stage('commit version update') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'gitlab-token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        // This only needs to be set once per agent
+                        sh 'git config --global user.name "jenkins"'
+                        sh 'git config --global user.email "jenkins@example.com"'
 
+                        sh 'git branch'
+                        sh 'git config --list'
 
-                    sh 'git branch'
-                    sh 'git config --list'
+                        sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@gitlab.com/jenkins5374511/java-maven-app.git"
 
-                    sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@gitlab.com/jenkins5374511/java-maven-app.git"
-
-                    sh 'git add .'
-                    sh 'git commit -m "ci: version bump"'
-                    sh  'git push origin HEAD:complete-pipeline-ecr-eks'
-
-
-
-
-                    
+                        sh 'git add .'
+                        sh 'git commit -m "ci: version bump"'
+                        sh 'git push origin HEAD:complete-pipeline-ecr-eks'
+                    }
+                }
             }
         }
-    }
-    }
 }
