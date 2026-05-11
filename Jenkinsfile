@@ -58,19 +58,30 @@ pipeline {
                 }
             }
         }
-        stage('commit version update') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'gitlab-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                        sh 'git config user.email "jenkins@example.com"'
-                        sh 'git config user.name "Jenkins"'
-                        sh "git remote set-url origin https://${USER}:${PASS}@gitlab.com/nanuchi/java-maven-app.git"
-                        sh 'git add .'
-                        sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:jenkins-jobs'
-                    }
-                }
+        stage('commit version update'){
+        steps{
+            script{
+                withCredentials([usernamePassword(credentialsId: 'gitlab-token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    //this part only need to set once 
+                    sh 'git config --global user.name "jenkins"'
+                    sh 'git config --global user.email "jenkins@example.com" '
+
+
+                    sh 'git branch'
+                    sh 'git config --list'
+
+                    sh "git remote set-url origin https://${USERNAME}:${PASSWORD}@gitlab.com/jenkins5374511/java-maven-app.git"
+
+                    sh 'git add .'
+                    sh 'git commit -m "ci: version bump"'
+                    sh  'git push origin HEAD:complete-pipeline-ecr-eks'
+
+
+
+
+                    
             }
         }
+    }
     }
 }
