@@ -1,125 +1,75 @@
-# Jenkins Projects (Java + Maven + Docker + Jenkins)
+# Complete Pipeline (ECR + EKS) Branch
 
-This repository is a  **Java Spring Boot + Maven** application used to demonstrate **Jenkins CI/CD pipeline patterns** and **containerization with Docker**.
+This branch documents an end-to-end Jenkins CI/CD flow for a Java Maven application, from versioned build to Docker image push in Amazon ECR and deployment to Kubernetes (EKS-style manifests).
 
----
+## Project Goal
+Build, package, containerize, publish, and deploy the app using Jenkins automation while applying practices demonstrated across all repository branches.
 
-## What’s in this repo (main branch)
+## End-to-End Pipeline Flow (`Jenkinsfile`)
+1. **Increment version**
+   - Uses Maven `build-helper` + `versions:set` to auto-bump patch version.
+   - Creates a unique image tag with `appVersion-buildNumber`.
+2. **Build application**
+   - Runs Maven build to produce the JAR artifact.
+3. **Build and push image to ECR**
+   - Builds Docker image from `Dockerfile`.
+   - Logs in securely to Amazon ECR using Jenkins credentials.
+   - Pushes versioned image to ECR repository.
+4. **Deploy to Kubernetes**
+   - Applies `kubernetes/deployment.yaml` and `kubernetes/service.yaml`.
+   - Uses environment substitution (`envsubst`) for dynamic image/app values.
+5. **Commit version update back to Git**
+   - Commits updated version metadata and pushes branch changes.
 
-- **Java app (Spring Boot)** in `src/main/java/com/example/Application.java`
-  - Starts a Spring Boot application and logs `"Java app started"` on startup.
-  - Includes a simple `getStatus()` method returning `"OK"`.
-- **Static web page** in `src/main/resources/static/index.html`
-  - Displays “Welcome to Java Maven Application”.
-- **Unit test** in `src/test/java/AppTest.java`
-  - Tests `getStatus()` returns `"OK"`.
-- **Maven build** via `pom.xml`
-  - Artifact: `com.example:java-maven-app`
-  - Version: `1.1.0-SNAPSHOT`
-  - Java target: 1.8
-- **Docker image** via `Dockerfile`
-  - Base image: `amazoncorretto:8-alpine`
-  - Exposes port `8080`
-  - Runs the packaged JAR from `target/`
-- **Jenkins pipeline** via `Jenkinsfile`
-  - Currently a baseline pipeline skeleton with 3 stages:
-    - `build jar`
-    - `build image`
-    - `deploy`
+## DevOps Practices Used Across This Repository
 
----
+### CI/CD and Pipeline Engineering
+- Declarative Jenkins pipelines with staged delivery (`build`, `image`, `deploy`).
+- Multi-branch pipeline strategy (baseline, versioning, SSH deployment, shared library, ECR/EKS flow).
+- Build metadata tagging for traceable releases.
+- Automated version management in pipeline.
 
-## Branches and what they represent
+### Build and Quality
+- Maven-based Java build lifecycle.
+- Clean packaging practices (`mvn clean package` / `mvn clean verify`).
+- Unit test coverage through JUnit test structure.
 
-This repo includes multiple branches that show different Jenkins pipeline improvements/approaches:
+### Containerization and Registry
+- Dockerized Spring Boot artifact delivery.
+- Versioned image tagging strategy.
+- Registry push workflows used for both:
+  - Docker Hub (other branches)
+  - Amazon ECR (this branch)
 
-- **`main`**
-  - Baseline Java/Maven app + Dockerfile + a simple (placeholder) Jenkins pipeline.
-- **`feature/jenkinsfile-sshagent`**
-  - Adds additional DevOps assets and documentation:
-    - `ReadMe.md`
-    - `docker-compose.yaml`
-    - `server-cmds.sh`
-    - `images/` directory
-  - Jenkinsfile is expanded compared to `main` and is oriented around an SSH-agent based approach.
-- **`feature/app-versioning`**
-  - Focuses on application/pipeline versioning.
-  - Jenkinsfile is significantly expanded (larger and more detailed than `main`).
-  - Dockerfile differs from `main` (extended to support the versioning approach).
-- **`jenkins-shared-lib`**
-  - Contains a Jenkinsfile variant aligned with using or demonstrating a shared-library style organization.
-- **`jenkins-branch`**
-  - Additional experimental/training branch (present in the repo branch list).
-- **`copilot/create-readme-file`**
-  - A working branch likely created for README authoring.
+### Deployment Patterns
+- Kubernetes manifest-based deployment (`Deployment` + `Service`).
+- Environment-templated manifests for reusable deployments.
+- Remote VM deployment pattern via `sshagent` + `scp` + `ssh` + Docker Compose (SSH-agent branch).
+- EC2 runtime operations practices (service orchestration and remote command execution).
 
----
+### Reusability and Maintainability
+- Jenkins Shared Library usage in dedicated branch (`buildJar`, `buildImage`, `dockerLogin`, `dockerPush`).
+- Separation of concerns between build, image, and deploy stages.
+- Reusable scripts/manifests for operational consistency.
 
-## Build and run locally
+### Security and Credential Handling
+- Jenkins credentials binding for registry logins and cloud keys.
+- Secret values injected at runtime instead of hardcoding.
+- Controlled remote access via Jenkins-managed SSH keys.
 
-### Prerequisites
-- Java 8+ (project targets Java 8)
-- Maven
-- Docker (optional, for container builds)
+## Repository Areas Referenced
+- `Jenkinsfile` (pipeline logic)
+- `Dockerfile` (image build definition)
+- `pom.xml` (build/version config)
+- `kubernetes/deployment.yaml` and `kubernetes/service.yaml` (K8s deployment)
+- `docker-compose.yaml` and `server-cmds.sh` (SSH-agent deployment pattern)
 
-### Build the JAR
+## Local Validation
 ```bash
-mvn clean package
+mvn clean verify
 ```
-
-### Run locally (without Docker)
-```bash
-java -jar target/java-maven-app-*.jar
-```
-
-Then open:
-- http://localhost:8080
-
-### Build the Docker image
-```bash
-docker build -t java-maven-app .
-```
-
-### Run the container
-```bash
-docker run --rm -p 8080:8080 java-maven-app
-```
-
----
-
-## CI/CD with Jenkins
-
-The repository contains Jenkins pipeline definitions (`Jenkinsfile`) that demonstrate different pipeline patterns across branches:
-
-- On `main`, the pipeline stages are present as a **starter template**.
-- On feature branches (notably `feature/app-versioning` and `feature/jenkinsfile-sshagent`), the pipeline is expanded to demonstrate more realistic CI/CD behavior (e.g., versioning and SSH-agent based flows).
-
-To use:
-1. Create a Jenkins Pipeline job pointing to this repository.
-2. Select the branch you want (`main` for baseline, feature branches for more advanced examples).
-3. Ensure Jenkins has the required tools configured (JDK, Maven, Docker access, and any required credentials for the chosen branch’s approach).
-
----
-
-## Project structure
-
-```text
-.
-├── Dockerfile
-├── Jenkinsfile
-├── pom.xml
-└── src
-    ├── main
-    │   ├── java/com/example/Application.java
-    │   └── resources/static/index.html
-    └── test
-        └── java/AppTest.java
-```
-
----
 
 ## Notes
-
-- The Dockerfile expects the Maven build output at `target/java-maven-app-*.jar`.
-- The app listens on port **8080**.
-- The test suite includes a basic JUnit test validating the application status method.
+- App container exposes `8080`.
+- Kubernetes service maps traffic to the application container port.
+- This repository is designed as a progressive DevOps portfolio: each branch demonstrates a practical CI/CD capability that contributes to the complete ECR + EKS pipeline story.
