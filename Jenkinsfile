@@ -6,7 +6,7 @@ pipeline {
         maven 'maven-3.9.13'
     }
     environment {
-        ECR_REPO_URL = '664574038682.dkr.ecr.eu-west-3.amazonaws.com'
+        ECR_REPO_URL = '450647752372.dkr.ecr.ap-southeast-1.amazonaws.com'
         IMAGE_REPO = "${ECR_REPO_URL}/java-maven-app"
     }
     stages {
