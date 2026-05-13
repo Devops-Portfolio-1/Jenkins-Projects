@@ -2,6 +2,8 @@
 
 This repository demonstrates an end-to-end CI/CD pipeline for a Java Maven application. The flow covers build, test, containerization, image publishing, and Kubernetes deployment on AWS, with Jenkins orchestrating each stage.
 
+![ci/cd pipeline](/images/ci-cd.gif)
+
 ---
 
 ## 🌿 Branch map (what each branch represents)
